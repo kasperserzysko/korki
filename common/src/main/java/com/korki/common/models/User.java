@@ -1,14 +1,15 @@
 package com.korki.common.models;
 
+import com.korki.common.models.enums.Role;
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -31,10 +32,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Student> students = new ArrayList<>();
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_roles",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<Role> roles = new ArrayList<>();
+    @ElementCollection(targetClass = Role.class)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role")
+    private Set<Role> roles = new HashSet<>();
 }

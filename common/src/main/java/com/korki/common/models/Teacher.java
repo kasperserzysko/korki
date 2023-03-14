@@ -1,23 +1,31 @@
 package com.korki.common.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
+@Data
+@NoArgsConstructor
 public class Teacher {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-
-
+    private String pictureURL;
+    private String city;
 
     @ManyToOne
     private User user;
 
+
     @OneToMany(mappedBy = "teacher")
-    private List<Advert> adverts = new ArrayList<>();
+    private Set<Advert> adverts = new HashSet<>();
+
+    @OneToMany(mappedBy = "teacher")
+    private Set<Availability> availabilities = new HashSet<>();
 }
