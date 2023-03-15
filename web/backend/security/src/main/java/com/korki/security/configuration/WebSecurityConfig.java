@@ -29,11 +29,14 @@ public class WebSecurityConfig {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
         return http.csrf().disable()
                 .httpBasic(Customizer.withDefaults())
-//                .formLogin()
-//                .loginPage("/login").defaultSuccessUrl("/", true).usernameParameter("email").passwordParameter("password")
-//                .and()
-//                .logout().logoutUrl("/logout").logoutSuccessUrl("/login")
-//                .and()
+                .formLogin()
+                .loginProcessingUrl("/login")
+                .defaultSuccessUrl("/dupcia", true)
+                .usernameParameter("email")
+                .passwordParameter("password")
+                .and()
+                .logout().logoutUrl("/logout").logoutSuccessUrl("/login")
+                .and()
                 .userDetailsService(userService).build();
     }
 }
