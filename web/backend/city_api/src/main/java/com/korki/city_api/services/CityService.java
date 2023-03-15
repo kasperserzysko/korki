@@ -16,7 +16,7 @@ public class CityService{
     private final static String API_KEY = "Y1r5eOAyKAoOcwBRQvMN9w==amsAhWzMwRMq1WNs";
     private final static String API_URL = "https://api.api-ninjas.com/v1/city?country=PL&limit=5&name=";
 
-    private List<String> getCities(String city) throws JsonProcessingException {
+    public List<String> getCities(String city) throws JsonProcessingException {
         var url = API_URL + city;
         WebClient client = WebClient.create();
 
