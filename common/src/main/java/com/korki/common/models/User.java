@@ -32,7 +32,7 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Student> students = new ArrayList<>();
 
-    @ElementCollection(targetClass = Role.class)
+    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "role")

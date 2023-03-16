@@ -1,4 +1,4 @@
-package com.korki.security.config;
+package com.korki.security.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
@@ -32,10 +32,7 @@ public class JwtService {
     return generateToken(new HashMap<>(), userDetails);
   }
 
-  public String generateToken(
-      Map<String, Object> extraClaims,
-      UserDetails userDetails
-  ) {
+  public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
     return Jwts
         .builder()
         .setClaims(extraClaims)

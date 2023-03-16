@@ -1,6 +1,7 @@
 package com.korki.security.config;
 
 
+import com.korki.security.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
