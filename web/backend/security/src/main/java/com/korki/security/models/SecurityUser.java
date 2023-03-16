@@ -1,19 +1,24 @@
 package com.korki.security.models;
 
+
 import com.korki.common.models.User;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 
-public record SecurityUser(User user) implements UserDetails {
+@Data
+@RequiredArgsConstructor
+public class SecurityUser implements UserDetails {
+
+    private final User user;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.name()))
-                .collect(Collectors.toSet());
+        return user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.name())).toList();
     }
 
     @Override
@@ -43,6 +48,6 @@ public record SecurityUser(User user) implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
