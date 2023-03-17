@@ -2,5 +2,8 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/backend/city_api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web/backend/security/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/web_app/backend/src/main/java" charset="UTF-8" />
   </component>
 </project>
