@@ -25,6 +25,7 @@ public class User {
     private String lastName;
     @Column(name = "activation_link")
     private String activationLink = UUID.randomUUID().toString();
+    private boolean isEnabled = false;
 
     @OneToMany(mappedBy = "user")
     private List<Teacher> teachers = new ArrayList<>();
@@ -37,4 +38,5 @@ public class User {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private Set<Role> roles = new HashSet<>();
+
 }
