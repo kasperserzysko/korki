@@ -10,6 +10,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>web_app</artifactId>
+    <packaging>pom</packaging>
+    <modules>
+        <module>backend</module>
+    </modules>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

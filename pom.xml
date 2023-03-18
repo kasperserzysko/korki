@@ -10,7 +10,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>common</module>
-        <module>web</module>
         <module>web_app</module>
     </modules>
     <properties>
