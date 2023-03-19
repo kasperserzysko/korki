@@ -1,4 +1,4 @@
-package com.korki.backend.daos;
+package com.korki.citi_api.daos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;

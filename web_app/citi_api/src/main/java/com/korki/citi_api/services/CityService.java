@@ -1,8 +1,8 @@
-package com.korki.backend.services;
+package com.korki.citi_api.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.google.gson.Gson;
-import com.korki.backend.daos.City;
+import com.korki.citi_api.daos.City;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 

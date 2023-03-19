@@ -1,4 +1,4 @@
-package com.korki.backend.models;
+package com.korki.backend.dtos;
 
 import lombok.Data;
 

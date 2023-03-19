@@ -13,6 +13,8 @@
     <packaging>pom</packaging>
     <modules>
         <module>backend</module>
+        <module>citi_api</module>
+        <module>email_service</module>
     </modules>
 
     <properties>
