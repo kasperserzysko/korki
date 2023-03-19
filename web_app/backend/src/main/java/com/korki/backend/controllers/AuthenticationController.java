@@ -2,7 +2,6 @@ package com.korki.backend.controllers;
 
 import com.korki.backend.dtos.SecurityUser;
 import com.korki.backend.dtos.UserDetailsDto;
-import com.korki.backend.exceptions.AccountNotEnabledException;
 import com.korki.backend.dtos.UserCredentialsDto;
 import com.korki.backend.services.AuthenticationService;
 import jakarta.annotation.security.PermitAll;
@@ -11,6 +10,7 @@ import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
@@ -63,9 +63,10 @@ public class AuthenticationController {
   public String handleUsernameNotFoundExceptions(UsernameNotFoundException ex){
     return ex.getMessage();
   }
+
   @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
-  @ExceptionHandler(AccountNotEnabledException.class)
-  public String handleAccountNotEnabledExceptions(AccountNotEnabledException ex){
+  @ExceptionHandler(DisabledException.class)
+  public String handleDisabledExceptions(DisabledException ex){
     return ex.getMessage();
   }
 }

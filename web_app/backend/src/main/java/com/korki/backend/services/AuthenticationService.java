@@ -3,7 +3,6 @@ package com.korki.backend.services;
 
 import com.korki.backend.dtos.SecurityUser;
 import com.korki.backend.dtos.UserDetailsDto;
-import com.korki.backend.exceptions.AccountNotEnabledException;
 import com.korki.backend.dtos.UserCredentialsDto;
 import com.korki.backend.services.interfaces.IAuthenticationService;
 import com.korki.backend.utills.Mapper;
@@ -19,7 +18,9 @@ import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -57,18 +58,11 @@ public class AuthenticationService implements IAuthenticationService {
     }
 
     @Override
-    public String login(UserCredentialsDto dto) throws Exception{
+    public String login(UserCredentialsDto dto) throws DisabledException, AuthenticationException, UsernameNotFoundException {
         var userEntity = userRepository.findUserByEmail(dto.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("Email not found!"));
-        if (!userEntity.isEnabled()) {
-            throw new AccountNotEnabledException();
-        }
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        dto.getEmail(),
-                        dto.getPassword()
-                )
-        );
+        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
+
         return jwtService.generateToken(new SecurityUser(userEntity));
     }
 

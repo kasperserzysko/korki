@@ -23,6 +23,9 @@ public class Advert {
     @Enumerated(EnumType.STRING)
     private Subject subject;
 
+    private boolean online = false;
+    private String city;
+
     @ManyToMany
     @JoinTable(
             name = "adverts_students_applied",

@@ -16,8 +16,7 @@ public class Teacher {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String pictureURL;
-    private String city;
+    private String description;
 
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")

@@ -30,7 +30,7 @@ public class User {
     @Column(name = "activation_link")
     private String activationLink = UUID.randomUUID().toString();
 
-    private boolean isEnabled = true;               //TODO USTAWIC NA FALSE
+    private boolean isEnabled = false;               //TODO USTAWIC NA FALSE
 
     @OneToOne(mappedBy = "user")
     private Teacher teacher;
