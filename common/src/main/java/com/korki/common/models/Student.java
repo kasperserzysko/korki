@@ -16,10 +16,14 @@ public class Student {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     @ManyToMany(mappedBy = "studentsApplied")
     private Set<Advert> advertsApplied = new HashSet<>();
     @ManyToMany(mappedBy = "studentsAccepted")
     private Set<Advert> advertsAccepted = new HashSet<>();
+
+    @OneToMany(mappedBy = "student")
+    private Set<TeacherRating> ratings = new HashSet<>();
 }

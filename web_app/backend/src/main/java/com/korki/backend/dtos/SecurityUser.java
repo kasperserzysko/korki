@@ -9,6 +9,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @RequiredArgsConstructor
@@ -18,7 +20,12 @@ public class SecurityUser implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return user.getRoles().stream().map(role -> new SimpleGrantedAuthority(role.name())).toList();
+        Set<SimpleGrantedAuthority> roles = new HashSet<>();
+        if (user.getRole() != null) {
+            var role = new SimpleGrantedAuthority(user.getRole().name());
+            roles.add(role);
+        }
+        return roles;
     }
 
     @Override

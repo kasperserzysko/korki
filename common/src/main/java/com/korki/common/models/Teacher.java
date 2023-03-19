@@ -19,9 +19,12 @@ public class Teacher {
     private String pictureURL;
     private String city;
 
-    @ManyToOne
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
+    @OneToMany(mappedBy = "teacher")
+    private Set<TeacherRating> ratings = new HashSet<>();
 
     @OneToMany(mappedBy = "teacher")
     private Set<Advert> adverts = new HashSet<>();

@@ -25,12 +25,6 @@ public class SecurityConfiguration {
     http
         .csrf()
         .disable()
-//        .authorizeHttpRequests()
-//        .requestMatchers("/login", "/register")
-//          .permitAll()
-//        .anyRequest()
-////          .authenticated()
-//        .and()
         .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
         .and()

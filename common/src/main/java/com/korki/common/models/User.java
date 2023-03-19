@@ -21,22 +21,24 @@ public class User {
 
     @Column(name = "first_name")
     private String firstName;
+
     @Column(name = "last_name")
     private String lastName;
+
+    private String phoneNumber;
+
     @Column(name = "activation_link")
     private String activationLink = UUID.randomUUID().toString();
-    private boolean isEnabled = false;
 
-    @OneToMany(mappedBy = "user")
-    private List<Teacher> teachers = new ArrayList<>();
+    private boolean isEnabled = true;               //TODO USTAWIC NA FALSE
 
-    @OneToMany(mappedBy = "user")
-    private List<Student> students = new ArrayList<>();
+    @OneToOne(mappedBy = "user")
+    private Teacher teacher;
 
-    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @OneToOne(mappedBy = "user")
+    private Student student;
+
     @Enumerated(EnumType.STRING)
-    @Column(name = "role")
-    private Set<Role> roles = new HashSet<>();
+    private Role role;
 
 }

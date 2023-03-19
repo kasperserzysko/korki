@@ -1,6 +1,7 @@
 package com.korki.backend.config;
 
 
+import com.korki.backend.exceptions.AccountNotEnabledException;
 import com.korki.backend.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
