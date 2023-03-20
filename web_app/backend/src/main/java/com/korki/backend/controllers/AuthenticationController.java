@@ -1,9 +1,8 @@
 package com.korki.backend.controllers;
 
-import com.korki.backend.dtos.SecurityUser;
-import com.korki.backend.dtos.UserDetailsDto;
 import com.korki.backend.dtos.UserCredentialsDto;
 import com.korki.backend.services.AuthenticationService;
+import com.korki.common.models.enums.Role;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -11,22 +10,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.DisabledException;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 public class AuthenticationController {
 
   private final AuthenticationService authenticationService;
 
   @PermitAll
-  @PostMapping("/register")
-  public ResponseEntity<?> register(@RequestBody UserCredentialsDto dto) {
-    authenticationService.register(dto);
+  @PostMapping("/register_teacher")
+  public ResponseEntity<?> registerTeacher(@RequestBody UserCredentialsDto dto) {
+    authenticationService.register(dto, Role.ROLE_TEACHER);
+    return new ResponseEntity<>(HttpStatus.OK);
+  }
+  @PermitAll
+  @PostMapping("/register_student")
+  public ResponseEntity<?> registerStudent(@RequestBody UserCredentialsDto dto) {
+    authenticationService.register(dto, Role.ROLE_STUDENT);
     return new ResponseEntity<>(HttpStatus.OK);
   }
 
@@ -36,12 +42,6 @@ public class AuthenticationController {
       return ResponseEntity.ok(authenticationService.login(dto));
       //return new ResponseEntity<>(HttpStatus.OK);
   }
-  @PostMapping("/fill")
-  public ResponseEntity<?> fillCredentials(@RequestBody UserDetailsDto dto, @AuthenticationPrincipal SecurityUser user){
-    authenticationService.fillCredentials(dto, user);
-    return new ResponseEntity<>(HttpStatus.OK);
-  }
-
   @PermitAll
   @GetMapping("activation/{url}")
   public ResponseEntity<?> activate(@PathVariable("url") String url){

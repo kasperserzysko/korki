@@ -2,13 +2,11 @@ package com.korki.backend.services;
 
 
 import com.korki.backend.dtos.SecurityUser;
-import com.korki.backend.dtos.UserDetailsDto;
 import com.korki.backend.dtos.UserCredentialsDto;
 import com.korki.backend.services.interfaces.IAuthenticationService;
 import com.korki.backend.utills.Mapper;
-import com.korki.common.models.Student;
-import com.korki.common.models.Teacher;
 import com.korki.common.models.User;
+import com.korki.common.models.enums.Role;
 import com.korki.common.repositories.StudentRepository;
 import com.korki.common.repositories.TeacherRepository;
 import com.korki.common.repositories.UserRepository;
@@ -46,14 +44,15 @@ public class AuthenticationService implements IAuthenticationService {
 
 
     @Override
-    public void register(UserCredentialsDto dto) {
+    public void register(UserCredentialsDto dto, Role role) {
 
         validate(dto);                                                                                            //Throws ConstraintViolationException
 
         var userEntity = new User();
         userEntity.setEmail(dto.getEmail());
         userEntity.setPassword(passwordEncoder.encode(dto.getPassword()));
-    //    emailService.sendActivationLink(userEntity.getEmail(), userEntity.getActivationLink());
+        userEntity.setRole(role);
+        emailService.sendActivationLink(userEntity.getEmail(), userEntity.getActivationLink());
         userRepository.save(userEntity);
     }
 
@@ -64,32 +63,6 @@ public class AuthenticationService implements IAuthenticationService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(dto.getEmail(), dto.getPassword()));
 
         return jwtService.generateToken(new SecurityUser(userEntity));
-    }
-
-
-    @Override
-    public void fillCredentials(UserDetailsDto dto, SecurityUser user) {
-        var userEntity = user.getUser();
-
-        validate(dto);
-
-        mapper.mapEntity(userEntity, dto);
-
-        switch (dto.getRole()){
-            case ROLE_STUDENT -> {
-                var studentEntity = new Student();
-                studentEntity.setUser(userEntity);
-                userEntity.setStudent(studentEntity);
-                studentRepository.save(studentEntity);
-            }
-            case ROLE_TEACHER -> {
-                var teacherEntity = new Teacher();
-                teacherEntity.setUser(userEntity);
-                userEntity.setTeacher(teacherEntity);
-                teacherRepository.save(teacherEntity);
-            }
-        }
-        userRepository.save(userEntity);
     }
 
     @Override

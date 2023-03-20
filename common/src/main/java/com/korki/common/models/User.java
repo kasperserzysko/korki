@@ -19,18 +19,10 @@ public class User {
     private String email;
     private String password;
 
-    @Column(name = "first_name")
-    private String firstName;
-
-    @Column(name = "last_name")
-    private String lastName;
-
-    private String phoneNumber;
-
     @Column(name = "activation_link")
     private String activationLink = UUID.randomUUID().toString();
 
-    private boolean isEnabled = false;               //TODO USTAWIC NA FALSE
+    private boolean isEnabled = true;               //TODO USTAWIC NA FALSE
 
     @OneToOne(mappedBy = "user")
     private Teacher teacher;
@@ -41,4 +33,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
+    @OneToMany(mappedBy = "user")
+    private List<Token> tokens = new ArrayList<>();
 }

@@ -1,6 +1,9 @@
 package com.korki.common.models;
 
+import com.korki.common.models.enums.LessonLocation;
 import com.korki.common.models.enums.Subject;
+import com.korki.common.models.enums.TeachingScope;
+import com.korki.common.models.enums.Weekday;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,15 +19,31 @@ public class Advert {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private float price;
-    @ManyToOne
-    private Teacher teacher;
 
     @Enumerated(EnumType.STRING)
     private Subject subject;
+    private String description;
+    private float price;
+    private boolean freeLesson;
 
-    private boolean online = false;
-    private String city;
+
+    @Enumerated(EnumType.STRING)
+    private LessonLocation lessonLocation;
+
+    @ElementCollection(targetClass = Weekday.class)
+    @JoinTable(name = "advert_weekdays", joinColumns = @JoinColumn(name = "advert_id"))
+    @Column(name = "weekday", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<Weekday> weekdays = new HashSet<>();
+
+    @ElementCollection(targetClass = TeachingScope.class)
+    @JoinTable(name = "advert_scopes", joinColumns = @JoinColumn(name = "advert_id"))
+    @Column(name = "scope", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private Set<TeachingScope> teachingScopes = new HashSet<>();
+
+    @ManyToOne
+    private Teacher teacher;
 
     @ManyToMany
     @JoinTable(

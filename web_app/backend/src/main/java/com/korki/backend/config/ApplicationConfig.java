@@ -1,6 +1,7 @@
 package com.korki.backend.config;
 
 import com.korki.backend.dtos.SecurityUser;
+import com.korki.common.repositories.TokenRepository;
 import com.korki.common.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -9,20 +10,23 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
 
 @Configuration
 @RequiredArgsConstructor
 public class ApplicationConfig {
 
-  private final UserRepository repository;
+  private final UserRepository userRepository;
+  private final TokenRepository tokenRepository;
 
   @Bean
   public UserDetailsService userDetailsService() {
-    return username -> repository.findUserByEmail(username).map(SecurityUser::new)
+    return username -> userRepository.findUserByEmail(username).map(SecurityUser::new)
         .orElseThrow(() -> new UsernameNotFoundException("User not found"));
   }
 
@@ -44,4 +48,23 @@ public class ApplicationConfig {
     return new BCryptPasswordEncoder();
   }
 
+  @Bean
+  public LogoutHandler logoutHandler(){
+    return ((request, response, authentication) -> {
+      final String authHeader = request.getHeader("Authorization");
+      final String jwt;
+      if (authHeader == null ||!authHeader.startsWith("Bearer ")) {
+        return;
+      }
+      jwt = authHeader.substring(7);
+      var storedToken = tokenRepository.findByToken(jwt)
+              .orElse(null);
+      if (storedToken != null) {
+        storedToken.setExpired(true);
+        storedToken.setRevoked(true);
+        tokenRepository.save(storedToken);
+        SecurityContextHolder.clearContext();
+      }
+    });
+  }
 }
