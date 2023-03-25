@@ -24,9 +24,14 @@ public class Teacher {
     //CREDENTIALS
     private String firstName;
     private String lastName;
+
+    @Enumerated(EnumType.STRING)
     private Gender gender;
     private LocalDate birthday;
+
+    @Enumerated(EnumType.STRING)
     private Education education;
+    @Enumerated(EnumType.STRING)
     private Experience experience;
     private Year yearOfCareerStart;
 
@@ -47,6 +52,4 @@ public class Teacher {
 
     @OneToMany(mappedBy = "teacher")
     private Set<Advert> adverts = new HashSet<>();
-
-
 }

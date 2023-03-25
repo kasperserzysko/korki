@@ -1,6 +1,8 @@
 package com.korki.backend.dtos;
 
+import com.korki.backend.annotations.DtoFor;
 import com.korki.backend.annotations.MappingField;
+import com.korki.common.models.Teacher;
 import com.korki.common.models.enums.Education;
 import com.korki.common.models.enums.Experience;
 import com.korki.common.models.enums.Gender;
@@ -8,12 +10,14 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.time.Year;
 
 @Data
 @NoArgsConstructor
+@DtoFor(classType = Teacher.class)
 public class TeacherCredentialsDto {
 
     @NotNull
@@ -24,7 +28,6 @@ public class TeacherCredentialsDto {
     private String lastName;
 
     @NotNull
-    @NotBlank
     @MappingField(fieldName = "gender")
     private Gender gender;
     @MappingField(fieldName = "birthday")
@@ -35,6 +38,8 @@ public class TeacherCredentialsDto {
     private Experience experience;
     @MappingField(fieldName = "yearOfCareerStart")
     private Year yearOfCareerStart;
+
+    private MultipartFile image;
 
     //ADDRESS AND CONTACTS
     @MappingField(fieldName = "voivodeship")
@@ -48,5 +53,4 @@ public class TeacherCredentialsDto {
 
     private String email;
     private String password;
-
 }
