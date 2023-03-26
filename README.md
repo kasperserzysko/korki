@@ -13,10 +13,14 @@
 * Spring validation
 * Spring email
 * Reflections API
+* Lombok
 
 ## Key Features
 
-* User authentication and authorization via JWT
+* Users:
+  - authentication and authorization via JWT
+  - account email veryfication 
+
 * Teachers
   - Creating adverts,
   -  ***IN PROGRESS***
