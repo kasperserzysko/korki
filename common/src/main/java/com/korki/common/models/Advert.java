@@ -5,14 +5,16 @@ import com.korki.common.models.enums.Subject;
 import com.korki.common.models.enums.TeachingScope;
 import com.korki.common.models.enums.Weekday;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Advert {
 
@@ -25,7 +27,6 @@ public class Advert {
     private String description;
     private float price;
     private boolean freeLesson;
-
 
     @Enumerated(EnumType.STRING)
     private LessonLocation lessonLocation;

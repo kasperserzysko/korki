@@ -63,12 +63,14 @@ public class AuthenticationService implements IAuthenticationService {
         switch (role){
             case ROLE_STUDENT -> {
                 var studentEntity = new Student();
+                studentEntity.setFirstName(dto.getFirstName());
                 studentEntity.setUser(userEntity);
                 userEntity.setStudent(studentEntity);
                 studentRepository.save(studentEntity);
             }
             case ROLE_TEACHER -> {
                 var teacherEntity = new Teacher();
+                teacherEntity.setFirstName(dto.getFirstName());
                 teacherEntity.setUser(userEntity);
                 userEntity.setTeacher(teacherEntity);
                 teacherRepository.save(teacherEntity);

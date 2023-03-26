@@ -2,6 +2,7 @@ package com.korki.backend.utills;
 
 import com.korki.backend.annotations.DtoFor;
 import com.korki.backend.annotations.MappingField;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Field;
@@ -42,8 +43,6 @@ public class Mapper {
             }
         }
     }
-
-
 
     private <E, D> void checkClass( E entity, D dto) {
         if (dto.getClass().getAnnotation(DtoFor.class).classType() != entity.getClass()) {

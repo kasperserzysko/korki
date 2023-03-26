@@ -2,13 +2,15 @@ package com.korki.common.models;
 
 import com.korki.common.models.enums.Role;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class User {
 

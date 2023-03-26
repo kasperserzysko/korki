@@ -4,8 +4,9 @@ import com.korki.common.models.enums.Education;
 import com.korki.common.models.enums.Experience;
 import com.korki.common.models.enums.Gender;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.Year;
@@ -13,7 +14,8 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 public class Teacher {
 
@@ -28,12 +30,11 @@ public class Teacher {
     @Enumerated(EnumType.STRING)
     private Gender gender;
     private LocalDate birthday;
-
-    @Enumerated(EnumType.STRING)
+    private int age;
     private Education education;
-    @Enumerated(EnumType.STRING)
     private Experience experience;
     private Year yearOfCareerStart;
+    private int seniority = 0;
 
     //ADDRESS AND CONTACTS
     private String voivodeship;
