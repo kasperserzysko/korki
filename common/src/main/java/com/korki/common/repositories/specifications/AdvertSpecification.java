@@ -18,6 +18,10 @@ public class AdvertSpecification{
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.equal(root.get("freeLesson"), 1);
     }
+    public static Specification<Advert> isInLocation(List<String> locations){
+        return (root, query, criteriaBuilder) ->
+                criteriaBuilder.in(root.get("lessonLocation")).value(locations);
+    }
     public static Specification<Advert> isInTeachingScope(List<String> scopes){
         return (root, query, criteriaBuilder) ->
                 criteriaBuilder.in(root.get("teachingScopes")).value(scopes);
@@ -56,7 +60,7 @@ public class AdvertSpecification{
             return criteriaBuilder.lessThanOrEqualTo(teacherAdvertJoin.get("age"), age);
         };
     }
-    public static Specification<Advert> gender(int gender){
+    public static Specification<Advert> gender(String gender){
         return (root, query, criteriaBuilder) -> {
             Join<Teacher, Advert> teacherAdvertJoin = root.join("teacher");
             return criteriaBuilder.equal(teacherAdvertJoin.get("gender"), gender);

@@ -33,7 +33,7 @@ public class Teacher {
     private int age;
     private Education education;
     private Experience experience;
-    private Year yearOfCareerStart;
+    private Year yearOfCareerStart = Year.now();
     private int seniority = 0;
 
     //ADDRESS AND CONTACTS
