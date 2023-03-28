@@ -1,9 +1,14 @@
 package com.korki.backend.services;
 
 import com.korki.backend.dtos.AdvertDetailsDto;
+import com.korki.backend.dtos.AdvertDto;
+import com.korki.backend.dtos.AdvertProfileDto;
 import com.korki.backend.dtos.SecurityUser;
+import com.korki.backend.dtos.advert_dtos.AdvertDisplayDto;
+import com.korki.backend.exceptions.NotFoundException;
 import com.korki.backend.services.interfaces.IAdvertService;
-import com.korki.backend.utills.Mapper;
+import com.korki.backend.utills.mappers.IMapper;
+import com.korki.backend.utills.mappers.Mapper;
 import com.korki.backend.utills.Validator;
 import com.korki.common.models.Advert;
 import com.korki.common.repositories.AdvertRepository;
@@ -21,26 +26,78 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AdvertService implements IAdvertService {
 
-    private final Validator validator;
-    private final Mapper mapper;
+    private final IMapper mapper;
 
     private final TeacherRepository teacherRepository;
     private final AdvertRepository advertRepository;
 
     @Override
     public void createAdvert(AdvertDetailsDto dto, SecurityUser loggedUser) {
-        validator.validate(dto);
-        var teacherEntityWithAdverts = teacherRepository.getTeacherWithAdverts(loggedUser.getUser().getTeacher().getId());
+        var teacherEntityWithAdverts = teacherRepository
+                .getTeacherWithAdverts(loggedUser
+                        .getUser()
+                        .getTeacher()
+                        .getId());
         var advertEntity = new Advert();
 
-        mapper.mapToEntity(advertEntity, dto);
-
+        mapper.getAdvertMapper()
+                .mapToEntity
+                .accept(dto, advertEntity);
         teacherEntityWithAdverts.getAdverts().add(advertEntity);
         advertEntity.setTeacher(teacherEntityWithAdverts);
 
         advertRepository.save(advertEntity);
         teacherRepository.save(teacherEntityWithAdverts);
     }
+
+    @Override
+    public List<AdvertDisplayDto> getProfileAdverts(SecurityUser securityUser) {
+        var teacherEntity = securityUser.getUser().getTeacher();
+        var advertEntity = advertRepository.getAdvertsByTeacherId(teacherEntity.getId());
+
+        return advertEntity.stream()
+                .map(advert -> mapper.getAdvertMapper()
+                        .mapToAdvertDisplay
+                        .apply(advert, teacherEntity))
+                .toList();
+    }
+
+    @Override
+    public void updateAdvert(AdvertDetailsDto dto, SecurityUser loggedUser, Long advertId) throws NotFoundException {
+        var advertEntity = advertRepository
+                .findById(advertId)
+                .orElseThrow(() -> new NotFoundException("Couldn't find advert with id: " + advertId));
+        mapper.getAdvertMapper()
+                .mapToEntity
+                .accept(dto, advertEntity);
+
+        advertRepository.save(advertEntity);
+    }
+
+    @Override
+    public AdvertDetailsDto getAdvertEditDetails(SecurityUser loggedUser, Long advertId) throws NotFoundException {
+        var advertEntity = advertRepository
+                .findById(advertId)
+                .orElseThrow(() -> new NotFoundException("Couldn't find advert with id: " + advertId));
+        return mapper.getAdvertMapper()
+                .mapToAdvertDetails
+                .apply(advertEntity);
+    }
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public List<AdvertProfileDto> getTeacherAdverts(Long teacherId){
+        teacherRepository.findById(teacherId)
+                .orElseThrow(); //TODO
+        var adverts = advertRepository.getAdvertsByTeacherId(teacherId);
+
+        return adverts.stream()
+                .map(mapper.getAdvertMapper().mapToAdvertProfile)
+                .toList();
+    }
+
+
+
 
     public void getAllAdverts(Optional<Float> price,
                               Optional<Boolean> free,
@@ -79,7 +136,7 @@ public class AdvertService implements IAdvertService {
         gender.ifPresent(g -> specifications
                 .add(AdvertSpecification.gender(g)));
 
-        advertRepository.getAdvertsByTeacherCity(city, Specification.allOf(specifications));
+       // advertRepository.getAdvertsByTeacherCity(city, Specification.allOf(specifications));
 
     }
 }

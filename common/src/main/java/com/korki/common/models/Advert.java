@@ -28,8 +28,11 @@ public class Advert {
     private float price;
     private boolean freeLesson;
 
+    @ElementCollection(targetClass = LessonLocation.class)
+    @JoinTable(name = "advert_location", joinColumns = @JoinColumn(name = "advert_id"))
+    @Column(name = "location", nullable = false)
     @Enumerated(EnumType.STRING)
-    private LessonLocation lessonLocation;
+    private Set<LessonLocation> lessonLocation = new HashSet<>();
 
     @ElementCollection(targetClass = Weekday.class)
     @JoinTable(name = "advert_weekdays", joinColumns = @JoinColumn(name = "advert_id"))

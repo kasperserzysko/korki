@@ -1,4 +1,4 @@
-package com.korki.backend.dtos;
+package com.korki.backend.dtos.teacher_dtos;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;

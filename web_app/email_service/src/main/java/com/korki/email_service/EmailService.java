@@ -20,11 +20,19 @@ public class EmailService {
         message.setFrom("teachingserviceks@gmail.com");
         message.setTo(to);
         message.setSubject(EMAIL_SUBJECT);
-        message.setText(createMessage(url));
+        message.setText(createActivationLinkMessage(url));
         emailSender.send(message);
     }
 
-    private String createMessage(String url){
+    @Async
+    public void sendApplyAdvertMessage(String to, String studentName, String teacherName){
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setFrom("teachingserviceks@gmail.com");
+        message.setTo(to);
+        message.setSubject("Hi " + teacherName + ", someone applied for You advert!");
+        message.setText("Hi " + teacherName + ", " + studentName + " has applied for Your advert!");
+    }
+    private String createActivationLinkMessage(String url){
         return EMAIL_TEXT +
                 url;
     }

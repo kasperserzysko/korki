@@ -4,7 +4,8 @@ package com.korki.backend.services;
 import com.korki.backend.dtos.SecurityUser;
 import com.korki.backend.dtos.UserCredentialsDto;
 import com.korki.backend.services.interfaces.IAuthenticationService;
-import com.korki.backend.utills.Mapper;
+import com.korki.backend.utills.mappers.IMapper;
+import com.korki.backend.utills.mappers.Mapper;
 import com.korki.common.models.Student;
 import com.korki.common.models.Teacher;
 import com.korki.common.models.Token;
@@ -41,7 +42,7 @@ public class AuthenticationService implements IAuthenticationService {
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
     private final Validator validator;
-    private final Mapper mapper;
+    private final IMapper mapper;
     private final JwtService jwtService;
 
     //REPOS
@@ -52,13 +53,13 @@ public class AuthenticationService implements IAuthenticationService {
 
     @Override
     public void register(UserCredentialsDto dto, Role role) {
-
-        validate(dto);                                                                                            //Throws ConstraintViolationException
-
         var userEntity = new User();
-        userEntity.setEmail(dto.getEmail());
-        userEntity.setPassword(passwordEncoder.encode(dto.getPassword()));
-        userEntity.setRole(role);
+
+        mapper.getUserMapper().mapNewUserCredentialsToEntity(dto,
+                userEntity,
+                passwordEncoder,
+                role);
+
         userRepository.save(userEntity);
         switch (role){
             case ROLE_STUDENT -> {
@@ -109,11 +110,5 @@ public class AuthenticationService implements IAuthenticationService {
                 .revoked(false)
                 .build();
         tokenRepository.save(token);
-    }
-    private <T> void validate(T dto) {
-        Set<ConstraintViolation<T>> violations = validator.validate(dto);
-        if (!violations.isEmpty()) {
-            throw new ConstraintViolationException(violations);
-        }
     }
 }

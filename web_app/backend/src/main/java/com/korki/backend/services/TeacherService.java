@@ -1,49 +1,52 @@
 package com.korki.backend.services;
 
 import com.korki.backend.dtos.SecurityUser;
-import com.korki.backend.dtos.TeacherCredentialsDto;
+import com.korki.backend.dtos.teacher_dtos.TeacherCredentialsDto;
+import com.korki.backend.dtos.teacher_dtos.TeacherDisplayDto;
+import com.korki.backend.exceptions.EmailFoundException;
 import com.korki.backend.services.interfaces.ITeacherService;
-import com.korki.backend.utills.Mapper;
-import com.korki.backend.utills.Validator;
+import com.korki.backend.utills.FileService;
+import com.korki.backend.utills.mappers.IMapper;
 import com.korki.common.models.User;
-import com.korki.common.repositories.AdvertRepository;
 import com.korki.common.repositories.TeacherRepository;
 import com.korki.common.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class TeacherService implements ITeacherService{
 
     private final UserRepository userRepository;
     private final TeacherRepository teacherRepository;
-    private final AdvertRepository advertRepository;
 
-    private final Mapper mapper;
-    private final Validator validator;
-
-    private final String FOLDER_PATH = "D:/kasperserzysko_repository/korki/teacher_photos/";
-
-
+    private final IMapper mapper;
 
 
     @Override
-    public void updateProfile(TeacherCredentialsDto dto, SecurityUser loggedUser) throws Exception {
-        validator.validate(dto);
+    public TeacherDisplayDto getTeacherProfileDisplay(SecurityUser loggedUser) {
+        return mapper.getTeacherMapper()
+                .mapToDisplayDto
+                .apply(loggedUser.getUser().getTeacher());
+    }
+
+    @Override
+    public void updateProfile(TeacherCredentialsDto dto, MultipartFile file, SecurityUser loggedUser) throws EmailFoundException, IOException {
 
         var userEntity = loggedUser.getUser();
         var teacherEntity = userEntity.getTeacher();
 
-        mapper.mapToEntity(teacherEntity, dto);
+        mapper.getTeacherMapper()
+                .mapToEntity
+                .accept(dto, teacherEntity);
+
         saveAccountCredentials(dto.getEmail(), dto.getPassword(), userEntity);
-        saveImage(dto.getImage(), teacherEntity.getId());
+        FileService.saveImage(file, teacherEntity.getId());
 
         teacherRepository.save(teacherEntity);
         userRepository.save(userEntity);
@@ -51,23 +54,15 @@ public class TeacherService implements ITeacherService{
 
     @Override
     public TeacherCredentialsDto getTeacherCredentials(SecurityUser loggedUser) {
-        var teacherEntity = loggedUser.getUser().getTeacher();
-        var teacherDto = new TeacherCredentialsDto();
-
-        mapper.mapToDto(teacherEntity, teacherDto);
-        return teacherDto;
+        return mapper.getTeacherMapper()
+                .mapToCredentialsDto
+                .apply(loggedUser.getUser().getTeacher());
     }
 
 
 
-    private void saveImage(MultipartFile file, Long teacherId) throws IOException {
-        if (file != null) {
-            byte[] bytes = file.getBytes();
-            Path path = Paths.get(FOLDER_PATH + teacherId + ".jpg");
-            Files.write(path, bytes);
-        }
-    }
-    private void saveAccountCredentials(String email, String password, User user) throws Exception {
+
+    private void saveAccountCredentials(String email, String password, User user) throws EmailFoundException {
         if (email != null) {
             validateEmail(email, user.getId());
             user.setEmail(email);
@@ -77,9 +72,9 @@ public class TeacherService implements ITeacherService{
         }
     }
 
-    private void validateEmail(String email, Long userId) throws Exception {
+    private void validateEmail(String email, Long userId) throws EmailFoundException {
         if (userRepository.existsByEmail(email, userId)){
-            throw new Exception("Email already exist!");
+            throw new EmailFoundException("Email already exist!");
         }
     }
 }
