@@ -13,8 +13,6 @@ public class Validator {
 
     private final jakarta.validation.Validator validator;
 
-
-
     public <T> void validate(T dto) {
         Set<ConstraintViolation<T>> violations = validator.validate(dto);
         if (!violations.isEmpty()) {

@@ -6,6 +6,8 @@ import com.korki.backend.dtos.advert_dtos.AdvertDisplayDto;
 import com.korki.backend.dtos.teacher_dtos.TeacherCredentialsDto;
 import com.korki.backend.dtos.teacher_dtos.TeacherDisplayDto;
 import com.korki.backend.exceptions.EmailFoundException;
+import com.korki.backend.exceptions.NoAccessException;
+import com.korki.backend.exceptions.NotFoundException;
 import com.korki.backend.services.AdvertService;
 import com.korki.backend.services.TeacherService;
 import jakarta.validation.ConstraintViolation;
@@ -60,6 +62,41 @@ public class TeacherController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ROLE_TEACHER')")
+    @PutMapping("/adverts/{id}")
+    public ResponseEntity<?> updateAdvert(@RequestBody AdvertDetailsDto dto, @PathVariable("id") Long id) throws NotFoundException {
+        advertService.updateAdvert(dto, id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PreAuthorize("hasRole('ROLE_TEACHER')")
+    @GetMapping("/adverts/{id}")
+    public ResponseEntity<AdvertDetailsDto> getEditCredentials(@PathVariable("id") Long id) throws NotFoundException {
+        return ResponseEntity.ok(advertService.getAdvertEditDetails(id));
+    }
+
+    @PreAuthorize("hasRole('ROLE_TEACHER')")
+    @DeleteMapping("/adverts/{id}")
+    public ResponseEntity<?> deleteAdvert(@PathVariable("id") Long id, @AuthenticationPrincipal SecurityUser loggedUser) throws NoAccessException, NotFoundException {
+        advertService.deleteAdvert(id, loggedUser);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
+
+    //////////////////////////////EXCEPTION HANDLERS//////////////////////////////
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(NoAccessException.class)
+    public String handleNoAccessException(NoAccessException ex){
+        return ex.getMessage();
+    }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ExceptionHandler(NotFoundException.class)
+    public String handleNotFoundException(NotFoundException ex){
+        return ex.getMessage();
+    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(ConstraintViolationException.class)
@@ -70,7 +107,7 @@ public class TeacherController {
     }
     @ResponseStatus(HttpStatus.NOT_ACCEPTABLE)
     @ExceptionHandler(EmailFoundException.class)
-    public String handleExceptions(Exception ex){
+    public String handleExceptions(EmailFoundException ex){
         return ex.getMessage();
     }
 

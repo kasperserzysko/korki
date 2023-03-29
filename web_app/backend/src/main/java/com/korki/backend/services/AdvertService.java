@@ -5,6 +5,7 @@ import com.korki.backend.dtos.AdvertDto;
 import com.korki.backend.dtos.AdvertProfileDto;
 import com.korki.backend.dtos.SecurityUser;
 import com.korki.backend.dtos.advert_dtos.AdvertDisplayDto;
+import com.korki.backend.exceptions.NoAccessException;
 import com.korki.backend.exceptions.NotFoundException;
 import com.korki.backend.services.interfaces.IAdvertService;
 import com.korki.backend.utills.mappers.IMapper;
@@ -63,7 +64,7 @@ public class AdvertService implements IAdvertService {
     }
 
     @Override
-    public void updateAdvert(AdvertDetailsDto dto, SecurityUser loggedUser, Long advertId) throws NotFoundException {
+    public void updateAdvert(AdvertDetailsDto dto, Long advertId) throws NotFoundException {
         var advertEntity = advertRepository
                 .findById(advertId)
                 .orElseThrow(() -> new NotFoundException("Couldn't find advert with id: " + advertId));
@@ -75,13 +76,27 @@ public class AdvertService implements IAdvertService {
     }
 
     @Override
-    public AdvertDetailsDto getAdvertEditDetails(SecurityUser loggedUser, Long advertId) throws NotFoundException {
+    public AdvertDetailsDto getAdvertEditDetails(Long advertId) throws NotFoundException {
         var advertEntity = advertRepository
                 .findById(advertId)
                 .orElseThrow(() -> new NotFoundException("Couldn't find advert with id: " + advertId));
         return mapper.getAdvertMapper()
                 .mapToAdvertDetails
                 .apply(advertEntity);
+    }
+
+    @Override
+    public void deleteAdvert(Long advertId, SecurityUser loggedUser) throws NotFoundException, NoAccessException {
+        var advertEntity = advertRepository
+                .findById(advertId)
+                .orElseThrow(() -> new NotFoundException("Couldn't find advert with id: " + advertId));
+        var teacherEntity = loggedUser.getUser().getTeacher();
+
+        if (advertEntity.getTeacher() == teacherEntity){
+            advertRepository.delete(advertEntity);
+        }else {
+            throw new NoAccessException("You can't delete that advert!");
+        }
     }
 
 

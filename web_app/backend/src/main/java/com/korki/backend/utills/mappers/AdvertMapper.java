@@ -7,6 +7,7 @@ import com.korki.backend.utills.Validator;
 import com.korki.common.models.Advert;
 import com.korki.common.models.Teacher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.function.BiConsumer;
@@ -14,10 +15,10 @@ import java.util.function.BiFunction;
 import java.util.function.Function;
 
 @Component
-@RequiredArgsConstructor
 public class AdvertMapper {
 
-    private final Validator validator;
+    @Autowired
+    private Validator validator;
 
     public final BiConsumer<AdvertDetailsDto, Advert> mapToEntity = (dto, advert) -> {
         validator.validate(dto);

@@ -5,16 +5,17 @@ import com.korki.backend.dtos.teacher_dtos.TeacherDisplayDto;
 import com.korki.backend.utills.Validator;
 import com.korki.common.models.Teacher;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 @Component
-@RequiredArgsConstructor
 public class TeacherMapper {
-    
-    private final Validator validator;
+
+    @Autowired
+    private Validator validator;
     
     public final BiConsumer<TeacherCredentialsDto, Teacher> mapToEntity = (dto, teacher) -> {
         validator.validate(dto);
