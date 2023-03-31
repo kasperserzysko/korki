@@ -1,14 +1,12 @@
-package com.korki.backend.dtos.teacher_dtos;
+package com.korki.backend.dtos.user_dtos;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
-public class TeacherDto {
+public class UserDto {
 
     private Long id;
     private String firstName;
-    private float rating;
-
 }

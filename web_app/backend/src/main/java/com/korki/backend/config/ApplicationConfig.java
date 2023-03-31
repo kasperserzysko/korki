@@ -1,6 +1,6 @@
 package com.korki.backend.config;
 
-import com.korki.backend.dtos.SecurityUser;
+import com.korki.backend.dtos.user_dtos.SecurityUser;
 import com.korki.common.repositories.TokenRepository;
 import com.korki.common.repositories.UserRepository;
 import lombok.RequiredArgsConstructor;

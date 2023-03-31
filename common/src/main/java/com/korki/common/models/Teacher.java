@@ -49,7 +49,7 @@ public class Teacher {
     private User user;
 
     @OneToMany(mappedBy = "teacher")
-    private Set<TeacherRating> ratings = new HashSet<>();
+    private Set<Rating> ratings = new HashSet<>();
 
     @OneToMany(mappedBy = "teacher")
     private Set<Advert> adverts = new HashSet<>();

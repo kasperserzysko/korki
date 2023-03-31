@@ -1,6 +1,6 @@
 package com.korki.backend.services;
 
-import com.korki.backend.dtos.SecurityUser;
+import com.korki.backend.dtos.user_dtos.SecurityUser;
 import com.korki.backend.services.interfaces.IStudentService;
 import com.korki.common.repositories.AdvertRepository;
 import com.korki.common.repositories.StudentRepository;

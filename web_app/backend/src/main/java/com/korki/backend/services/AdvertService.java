@@ -1,21 +1,21 @@
 package com.korki.backend.services;
 
-import com.korki.backend.dtos.AdvertDetailsDto;
-import com.korki.backend.dtos.AdvertDto;
-import com.korki.backend.dtos.AdvertProfileDto;
-import com.korki.backend.dtos.SecurityUser;
+import com.korki.backend.dtos.advert_dtos.AdvertCreateDto;
+import com.korki.backend.dtos.user_dtos.SecurityUser;
+import com.korki.backend.dtos.advert_dtos.AdvertDetailsDto;
 import com.korki.backend.dtos.advert_dtos.AdvertDisplayDto;
+import com.korki.backend.dtos.advert_dtos.AdvertDto;
 import com.korki.backend.exceptions.NoAccessException;
 import com.korki.backend.exceptions.NotFoundException;
 import com.korki.backend.services.interfaces.IAdvertService;
 import com.korki.backend.utills.mappers.IMapper;
-import com.korki.backend.utills.mappers.Mapper;
-import com.korki.backend.utills.Validator;
 import com.korki.common.models.Advert;
 import com.korki.common.repositories.AdvertRepository;
 import com.korki.common.repositories.TeacherRepository;
 import com.korki.common.repositories.specifications.AdvertSpecification;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -33,7 +33,7 @@ public class AdvertService implements IAdvertService {
     private final AdvertRepository advertRepository;
 
     @Override
-    public void createAdvert(AdvertDetailsDto dto, SecurityUser loggedUser) {
+    public void createAdvert(AdvertCreateDto dto, SecurityUser loggedUser) {
         var teacherEntityWithAdverts = teacherRepository
                 .getTeacherWithAdverts(loggedUser
                         .getUser()
@@ -64,7 +64,7 @@ public class AdvertService implements IAdvertService {
     }
 
     @Override
-    public void updateAdvert(AdvertDetailsDto dto, Long advertId) throws NotFoundException {
+    public void updateAdvert(AdvertCreateDto dto, Long advertId) throws NotFoundException {
         var advertEntity = advertRepository
                 .findById(advertId)
                 .orElseThrow(() -> new NotFoundException("Couldn't find advert with id: " + advertId));
@@ -76,12 +76,12 @@ public class AdvertService implements IAdvertService {
     }
 
     @Override
-    public AdvertDetailsDto getAdvertEditDetails(Long advertId) throws NotFoundException {
+    public AdvertCreateDto getAdvertEditDetails(Long advertId) throws NotFoundException {
         var advertEntity = advertRepository
                 .findById(advertId)
                 .orElseThrow(() -> new NotFoundException("Couldn't find advert with id: " + advertId));
         return mapper.getAdvertMapper()
-                .mapToAdvertDetails
+                .mapToAdvertCreate
                 .apply(advertEntity);
     }
 
@@ -99,20 +99,30 @@ public class AdvertService implements IAdvertService {
         }
     }
 
+    @Override
+    public List<AdvertDto> getCityAdverts(String city, Optional<Integer> page) {
+        final int ITEMS_PER_PAGE = 10;
+        final Pageable advertPage;
+        advertPage = page.map(p -> PageRequest.of(p, ITEMS_PER_PAGE))
+                .orElseGet(() ->  PageRequest.of(0, ITEMS_PER_PAGE));
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    public List<AdvertProfileDto> getTeacherAdverts(Long teacherId){
-        teacherRepository.findById(teacherId)
-                .orElseThrow(); //TODO
-        var adverts = advertRepository.getAdvertsByTeacherId(teacherId);
-
-        return adverts.stream()
-                .map(mapper.getAdvertMapper().mapToAdvertProfile)
+        return advertRepository
+                .getAdvertsByCity(city, advertPage)
+                .stream()
+                .map(mapper.getAdvertMapper().mapToAdvertDto)
                 .toList();
+    }
+
+    @Override
+    public AdvertDetailsDto getAdvert(Long advertId) throws NotFoundException {
+        var advert = advertRepository.findById(advertId)
+                .orElseThrow(() -> new NotFoundException("Couldn't find advert!"));
+        return mapper.getAdvertMapper().mapToAdvertDetails.apply(advert);
     }
 
 
 
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void getAllAdverts(Optional<Float> price,
                               Optional<Boolean> free,

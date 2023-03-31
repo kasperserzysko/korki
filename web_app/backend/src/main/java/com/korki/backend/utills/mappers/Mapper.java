@@ -11,6 +11,7 @@ public class Mapper implements IMapper{
     private final AdvertMapper advertMapper;
     private final UserMapper userMapper;
     private final TeacherMapper teacherMapper;
+    private final RatingMapper ratingMapper;
 
     @Override
     public AdvertMapper getAdvertMapper() {
@@ -25,6 +26,11 @@ public class Mapper implements IMapper{
     @Override
     public TeacherMapper getTeacherMapper() {
         return teacherMapper;
+    }
+
+    @Override
+    public RatingMapper getRatingMapper() {
+        return ratingMapper;
     }
 
 

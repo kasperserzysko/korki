@@ -1,4 +1,4 @@
-package com.korki.backend.dtos;
+package com.korki.backend.dtos.advert_dtos;
 
 import com.korki.common.models.enums.LessonLocation;
 import com.korki.common.models.enums.Subject;
@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Data
 @NoArgsConstructor
-public class AdvertDetailsDto {
+public class AdvertCreateDto {
 
     @NotNull
     private Subject subject;
@@ -32,7 +32,7 @@ public class AdvertDetailsDto {
     private boolean freeLesson;
 
     @NotNull
-    private Set<LessonLocation> lessonLocation;
+    private Set<LessonLocation> lessonLocation = new HashSet<>();
 
     @NotNull
     private Set<Weekday> weekdays = new HashSet<>();

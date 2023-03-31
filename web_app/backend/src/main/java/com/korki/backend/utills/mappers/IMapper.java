@@ -5,4 +5,5 @@ public interface IMapper {
     AdvertMapper getAdvertMapper();
     UserMapper getUserMapper();
     TeacherMapper getTeacherMapper();
+    RatingMapper getRatingMapper();
 }

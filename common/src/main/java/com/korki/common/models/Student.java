@@ -29,5 +29,5 @@ public class Student {
     private Set<Advert> advertsAccepted = new HashSet<>();
 
     @OneToMany(mappedBy = "student")
-    private Set<TeacherRating> ratings = new HashSet<>();
+    private Set<Rating> ratings = new HashSet<>();
 }

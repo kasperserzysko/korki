@@ -1,4 +1,4 @@
-package com.korki.backend.dtos;
+package com.korki.backend.dtos.user_dtos;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

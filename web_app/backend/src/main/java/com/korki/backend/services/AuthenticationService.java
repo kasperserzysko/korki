@@ -1,11 +1,10 @@
 package com.korki.backend.services;
 
 
-import com.korki.backend.dtos.SecurityUser;
-import com.korki.backend.dtos.UserCredentialsDto;
+import com.korki.backend.dtos.user_dtos.SecurityUser;
+import com.korki.backend.dtos.user_dtos.UserCredentialsDto;
 import com.korki.backend.services.interfaces.IAuthenticationService;
 import com.korki.backend.utills.mappers.IMapper;
-import com.korki.backend.utills.mappers.Mapper;
 import com.korki.common.models.Student;
 import com.korki.common.models.Teacher;
 import com.korki.common.models.Token;
@@ -17,9 +16,6 @@ import com.korki.common.repositories.TeacherRepository;
 import com.korki.common.repositories.TokenRepository;
 import com.korki.common.repositories.UserRepository;
 import com.korki.email_service.EmailService;
-import jakarta.validation.ConstraintViolation;
-import jakarta.validation.ConstraintViolationException;
-import jakarta.validation.Validator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.DisabledException;
@@ -30,8 +26,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Set;
-
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -41,7 +35,6 @@ public class AuthenticationService implements IAuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
-    private final Validator validator;
     private final IMapper mapper;
     private final JwtService jwtService;
 
@@ -78,7 +71,7 @@ public class AuthenticationService implements IAuthenticationService {
             }
         }
 
-        //emailService.sendActivationLink(userEntity.getEmail(), userEntity.getActivationLink());
+        //emailService.sendActivationLink(userEntity.getEmail(), userEntity.getActivationLink());   //TODO
     }
 
     @Override

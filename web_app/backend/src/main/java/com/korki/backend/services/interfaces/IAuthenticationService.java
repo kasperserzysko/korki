@@ -1,7 +1,7 @@
 package com.korki.backend.services.interfaces;
 
 
-import com.korki.backend.dtos.UserCredentialsDto;
+import com.korki.backend.dtos.user_dtos.UserCredentialsDto;
 import com.korki.common.models.enums.Role;
 
 public interface IAuthenticationService {

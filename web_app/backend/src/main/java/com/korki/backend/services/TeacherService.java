@@ -1,6 +1,6 @@
 package com.korki.backend.services;
 
-import com.korki.backend.dtos.SecurityUser;
+import com.korki.backend.dtos.user_dtos.SecurityUser;
 import com.korki.backend.dtos.teacher_dtos.TeacherCredentialsDto;
 import com.korki.backend.dtos.teacher_dtos.TeacherDisplayDto;
 import com.korki.backend.exceptions.EmailFoundException;
@@ -59,7 +59,10 @@ public class TeacherService implements ITeacherService{
                 .apply(loggedUser.getUser().getTeacher());
     }
 
-
+    @Override
+    public byte[] getProfileImage(SecurityUser loggedUser) throws IOException {
+        return FileService.getImage(loggedUser.getUser().getTeacher().getId());
+    }
 
 
     private void saveAccountCredentials(String email, String password, User user) throws EmailFoundException {

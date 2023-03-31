@@ -1,7 +1,7 @@
 package com.korki.backend.controllers;
 
-import com.korki.backend.dtos.UserCredentialsDto;
-import com.korki.backend.services.AuthenticationService;
+import com.korki.backend.dtos.user_dtos.UserCredentialsDto;
+import com.korki.backend.services.interfaces.IAuthenticationService;
 import com.korki.common.models.enums.Role;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.ConstraintViolation;
@@ -21,7 +21,7 @@ import java.util.List;
 @Validated
 public class AuthenticationController {
 
-  private final AuthenticationService authenticationService;
+  private final IAuthenticationService authenticationService;
 
   @PermitAll
   @PostMapping("/register_teacher")

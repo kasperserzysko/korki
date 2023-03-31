@@ -49,6 +49,8 @@ public class Advert {
     @ManyToOne
     private Teacher teacher;
 
+
+
     @ManyToMany
     @JoinTable(
             name = "adverts_students_applied",

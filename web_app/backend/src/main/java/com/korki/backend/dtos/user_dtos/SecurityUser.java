@@ -1,4 +1,4 @@
-package com.korki.backend.dtos;
+package com.korki.backend.dtos.user_dtos;
 
 
 import com.korki.common.models.User;

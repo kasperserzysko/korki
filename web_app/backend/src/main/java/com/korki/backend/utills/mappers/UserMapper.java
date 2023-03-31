@@ -1,6 +1,6 @@
 package com.korki.backend.utills.mappers;
 
-import com.korki.backend.dtos.UserCredentialsDto;
+import com.korki.backend.dtos.user_dtos.UserCredentialsDto;
 import com.korki.backend.utills.Validator;
 import com.korki.common.models.User;
 import com.korki.common.models.enums.Role;
