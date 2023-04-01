@@ -21,8 +21,8 @@
   - email notifications,
   - CRUD operations on adverts,
   - messaging between users,
-  - searching adverts by up to 7 parameters
-
+  - searching adverts by up to 7 parameters.
+  - files uploading 
 
 ## How To Use
 
