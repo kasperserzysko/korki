@@ -100,44 +100,56 @@ public class AdvertService implements IAdvertService {
     }
 
     @Override
-    public List<AdvertDto> getCityAdverts(String city, Optional<Integer> page) {
-        final int ITEMS_PER_PAGE = 10;
-        final Pageable advertPage;
-        advertPage = page.map(p -> PageRequest.of(p, ITEMS_PER_PAGE))
-                .orElseGet(() ->  PageRequest.of(0, ITEMS_PER_PAGE));
-
-        return advertRepository
-                .getAdvertsByCity(city, advertPage)
-                .stream()
-                .map(mapper.getAdvertMapper().mapToAdvertDto)
-                .toList();
-    }
-
-    @Override
     public AdvertDetailsDto getAdvert(Long advertId) throws NotFoundException {
         var advert = advertRepository.findById(advertId)
                 .orElseThrow(() -> new NotFoundException("Couldn't find advert!"));
         return mapper.getAdvertMapper().mapToAdvertDetails.apply(advert);
     }
-
-
-
-    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public void getAllAdverts(Optional<Float> price,
-                              Optional<Boolean> free,
-                              Optional<List<String>> scopes,
-                              Optional<List<String>> locations,     //TODO
-                              Optional<List<String>> weekdays,
-                              Optional<Integer> education,
-                              Optional<Integer> experience,
-                              Optional<Integer> seniority,
-                              Optional<Integer> ageMin,
-                              Optional<Integer> ageMax,
-                              Optional<String> gender,
-                              String city){
+    @Override
+    public List<AdvertDto> getCityAdverts(Optional<Float> price,
+                                          Optional<Boolean> free,
+                                          Optional<List<String>> scopes,
+                                          Optional<List<String>> locations,     //TODO
+                                          Optional<List<String>> weekdays,
+                                          Optional<Integer> education,
+                                          Optional<Integer> experience,
+                                          Optional<Integer> seniority,
+                                          Optional<Integer> ageMin,
+                                          Optional<Integer> ageMax,
+                                          Optional<String> gender,
+                                          Optional<Integer> page,
+                                          String city){
 
         List<Specification<Advert>> specifications = new ArrayList<>();
+        addSpecifications( price, free, scopes, locations, weekdays, education, experience, seniority,ageMin, ageMax, gender, city, specifications);
+
+        final int ITEMS_PER_PAGE = 10;
+        final Pageable advertPage;
+        advertPage = page.map(p -> PageRequest.of(p, ITEMS_PER_PAGE))
+                .orElseGet(() ->  PageRequest.of(0, ITEMS_PER_PAGE));
+        return advertRepository
+                .findAll(Specification.allOf(specifications), advertPage)
+                .getContent()
+                .stream()
+                .map(mapper.getAdvertMapper().mapToAdvertDto)
+                .toList();
+    }
+
+
+
+    private void addSpecifications(Optional<Float> price,
+                                   Optional<Boolean> free,
+                                   Optional<List<String>> scopes,
+                                   Optional<List<String>> locations,
+                                   Optional<List<String>> weekdays,
+                                   Optional<Integer> education,
+                                   Optional<Integer> experience,
+                                   Optional<Integer> seniority,
+                                   Optional<Integer> ageMin,
+                                   Optional<Integer> ageMax,
+                                   Optional<String> gender,
+                                   String city,
+                                   List<Specification<Advert>> specifications){
         price.ifPresent(p -> specifications
                 .add(AdvertSpecification.priceLessOrEqualsThan(p)));
         free.ifPresent(f -> specifications
@@ -160,8 +172,6 @@ public class AdvertService implements IAdvertService {
                 .add(AdvertSpecification.youngerThan(a)));
         gender.ifPresent(g -> specifications
                 .add(AdvertSpecification.gender(g)));
-
-       // advertRepository.getAdvertsByTeacherCity(city, Specification.allOf(specifications));
-
+        specifications.add(AdvertSpecification.city(city));
     }
 }

@@ -10,6 +10,7 @@ import com.korki.backend.exceptions.NoAccessException;
 import com.korki.backend.exceptions.NotFoundException;
 import com.korki.backend.services.interfaces.IAdvertService;
 import com.korki.backend.services.interfaces.ITeacherService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
@@ -126,5 +127,11 @@ public class TeacherProfileController {
     @ExceptionHandler(IOException.class)
     public String handleIOException(){
         return "Couln't get a file!";
+    }
+
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    @ExceptionHandler(ExpiredJwtException.class)
+    public String handleExpiredJwtException(){
+        return "Token expired!";
     }
 }

@@ -66,4 +66,10 @@ public class AdvertSpecification{
             return criteriaBuilder.equal(teacherAdvertJoin.get("gender"), gender);
         };
     }
+    public static Specification<Advert> city(String city){
+        return (root, query, criteriaBuilder) -> {
+            Join<Teacher, Advert> teacherAdvertJoin = root.join("teacher");
+            return criteriaBuilder.equal(teacherAdvertJoin.get("city"), city);
+        };
+    }
 }

@@ -20,6 +20,18 @@ public interface IAdvertService {
     void updateAdvert(AdvertCreateDto dto, Long advertId) throws NotFoundException;
     AdvertCreateDto getAdvertEditDetails(Long advertId) throws NotFoundException;
     void deleteAdvert(Long advertId, SecurityUser loggedUser) throws NotFoundException, NoAccessException;
-    List<AdvertDto> getCityAdverts(String city, Optional<Integer> page);
+    List<AdvertDto> getCityAdverts(Optional<Float> price,
+                                   Optional<Boolean> free,
+                                   Optional<List<String>> scopes,
+                                   Optional<List<String>> locations,
+                                   Optional<List<String>> weekdays,
+                                   Optional<Integer> education,
+                                   Optional<Integer> experience,
+                                   Optional<Integer> seniority,
+                                   Optional<Integer> ageMin,
+                                   Optional<Integer> ageMax,
+                                   Optional<String> gender,
+                                   Optional<Integer> page,
+                                   String city);
     AdvertDetailsDto getAdvert(Long advertId) throws NotFoundException;
 }

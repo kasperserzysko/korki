@@ -34,7 +34,7 @@ public class AdvertController {
                                                       @PathVariable("city") String city,
                                                       @RequestParam("page") Optional<Integer> page){
 
-        return ResponseEntity.ok(advertService.getCityAdverts(city,page));
+        return ResponseEntity.ok(advertService.getCityAdverts(price, free, scopes, locations, weekdays, education, experience, seniority, ageMin, ageMax, gender, page, city));
     }
 
     @GetMapping("/{id}")
